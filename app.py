@@ -14,6 +14,8 @@
 
 import os
 import sys
+import json
+import requests
 from argparse import ArgumentParser
 
 from flask import Flask, request, abort
@@ -63,11 +65,27 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text)
-    )
+#    line_bot_api.reply_message(
+#        event.reply_token,
+#        TextSendMessage(text=event.message.text)
+#    )
+    url = 'https://api.line.me/v2/bot/message/push'
+    userId = event.source.userId
+    data = {
+        "to": userId,
+        "messages": [
+            {
+                "type": "text",
+                "text": "Hello, user!"
+            }
+        ]
+    }
 
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + channel_access_token
+    }
+    requests.post(url, data=json.dumps(data), headers=headers)
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
