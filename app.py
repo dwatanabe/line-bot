@@ -70,7 +70,7 @@ def message_text(event):
 #        TextSendMessage(text=event.message.text)
 #    )
     url = 'https://api.line.me/v2/bot/message/push'
-    userId = event.source.userId
+    userId = event.source.userid
     data = {
         "to": userId,
         "messages": [
